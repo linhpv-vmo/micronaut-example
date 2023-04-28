@@ -1,0 +1,58 @@
+micronaut:
+  application:
+    name: ajt-recruiter-post
+  http:
+    client:
+      connect-timeout: 60s
+      read-timeout: 60s
+      connect-ttl: 60s
+      num-of-threads: 16
+      log-level: info
+  router:
+    static-resources:
+      swagger:
+        paths: classpath:META-INF/swagger
+        mapping: /ajt-recruiter-post/swagger/**
+      swagger-ui:
+        paths: classpath:META-INF/swagger/views/swagger-ui
+        mapping: /ajt-recruiter-post/swagger-ui/**
+  server:
+    cors:
+      enabled: true
+    netty:
+      log-level: debug
+      access-logger:
+        enabled: true
+    port: 8080
+    context-path: /ajt-recruiter-post
+
+datasources:
+  default:
+    url: ${JDBC_URL:`jdbc:h2:mem:default;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE`}
+    username: ${JDBC_USER:sa}
+    password: ${JDBC_PASSWORD:sa}
+    driverClassName: ${JDBC_DRIVER:org.h2.Driver}
+    maximum-pool-size: 10
+    minimum-idle: 2
+
+jpa:
+  default:
+    entity-scan:
+      packages:
+        - 'vmo.du5.com.entity'
+        - 'vmo.du5.com'
+        - 'vmo.du5.com.*'
+        - 'vmo.du5.com.'
+      classpath: true
+      enabled: true
+    properties:
+      hibernate:
+        hbm2ddl:
+          auto: update
+        show_sql: true
+   # packages-to-scan: vmo.du5.com.entity
+
+netty:
+  default:
+    allocator:
+      max-order: 9

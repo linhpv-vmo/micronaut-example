@@ -1,0 +1,72 @@
+micronaut:
+  application:
+    name: ajt-recruiter-post
+  http:
+    client:
+      connect-timeout: 100s
+      read-timeout: 100s
+      connect-ttl: 100s
+      num-of-threads: 8
+      log-level: debug
+    services:
+      openai:
+        num-of-threads: 4
+        pool:
+          enabled: true
+        url: https://api.openai.com
+  router:
+    static-resources:
+      swagger:
+        paths: classpath:META-INF/swagger
+        mapping: /ajt-recruiter-post/swagger/**
+      swagger-ui:
+        paths: classpath:META-INF/swagger/views/swagger-ui
+        mapping: /ajt-recruiter-post/swagger-ui/**
+    versioning:
+      enabled: true
+  server:
+    context-path: /ajt-recruiter-post
+    netty:
+      log-level: INFO
+      access-logger:
+        enabled: true
+        log-format: '%h %l %u %t "%r" %s %b "%{Referer}i" "%{User-Agent}i"'
+    port: 8086
+
+datasources:
+  default:
+    url: ${JDBC_URL:`jdbc:h2:mem:default;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE`}
+    username: ${JDBC_USER:sa}
+    password: ${JDBC_PASSWORD:sa}
+    driverClassName: ${JDBC_DRIVER:org.h2.Driver}
+    maximum-pool-size: 10
+    minimum-idle: 2
+    auto-commit: true
+
+jpa:
+  default:
+    entity-scan:
+      packages: vmo.du5.com.entity
+      enabled: true
+    #  classpath: true
+    properties:
+      hibernate:
+        hbm2ddl:
+          auto: update
+        show_sql: true
+    packages-to-scan: vmo.du5.com
+
+netty:
+  default:
+    allocator:
+      max-order: 6
+
+openAI-config:
+  api-key: ${OPENAI_API_KEY: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}
+  max-token: 1000
+  temperature: 0.7
+  chat-endpoint: https://api.openai.com/v1/chat/completions
+  # path: /models
+  api-chat-complete:
+    gpt-model: gpt-3.5-turbo
+    role: user
